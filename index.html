@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Pembelajaran Interaktif: Teks Prosedur</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Orbitron & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            bg: '#0B0F19',
+                            card: '#151D2A',
+                            accent: '#00F0FF',
+                            pink: '#FF007A',
+                            purple: '#7000FF',
+                            success: '#00FF66',
+                            text: '#E2E8F0'
+                        }
+                    },
+                    fontFamily: {
+                        orbitron: ['Orbitron', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #0B0F19;
+            color: #E2E8F0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, rgba(255, 0, 122, 0.08) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .cyber-border {
+            position: relative;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.05);
+        }
+
+        .cyber-border-pink {
+            border: 1px solid rgba(255, 0, 122, 0.3);
+            box-shadow: 0 0 15px rgba(255, 0, 122, 0.1);
+        }
+
+        .glow-text {
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .glow-pink-text {
+            text-shadow: 0 0 10px rgba(255, 0, 122, 0.5);
+        }
+
+        .btn-cyber {
+            background: linear-gradient(135deg, #00F0FF 0%, #7000FF 100%);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-cyber:hover {
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .glass-panel {
+            background: rgba(21, 29, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .sortable-item {
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+
+        .sortable-item:active {
+            cursor: grabbing;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0B0F19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #151D2A;
+            border: 1px solid #00F0FF;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-cyber-accent selection:text-black">
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 glass-panel border-b border-cyber-accent/20 px-4 lg:px-8 py-4">
+        <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyber-accent to-cyber-purple flex items-center justify-center text-black font-extrabold font-orbitron text-xl shadow-lg shadow-cyber-accent/30">
+                    TP
+                </div>
+                <div>
+                    <h1 class="font-orbitron font-bold text-lg lg:text-xl text-white tracking-wider">PROSEDUR<span class="text-cyber-accent">LAB</span></h1>
+                    <p class="text-xs text-gray-400">Media Pembelajaran Interaktif Teks Prosedur</p>
+                </div>
+            </div>
+
+            <!-- Tab Buttons -->
+            <nav class="flex gap-2 bg-cyber-bg p-1.5 rounded-xl border border-gray-800">
+                <button onclick="switchTab('materi')" id="tab-materi" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 bg-cyber-accent text-black font-orbitron">
+                    <i class="fa-solid fa-book-open"></i> <span class="hidden sm:inline">Materi</span>
+                </button>
+                <button onclick="switchTab('simulasi')" id="tab-simulasi" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-gray-400 hover:text-white font-orbitron">
+                    <i class="fa-solid fa-vial-circle-check"></i> <span class="hidden sm:inline">Simulasi</span>
+                </button>
+                <button onclick="switchTab('kuis')" id="tab-kuis" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold transition-all flex items-center gap-2 text-gray-400 hover:text-white font-orbitron">
+                    <i class="fa-solid fa-gamepad"></i> <span class="hidden sm:inline">Kuis Evaluasi</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto w-full px-4 lg:px-8 py-8 flex-grow">
+
+        <!-- ================= MODUL MATERI ================= -->
+        <section id="section-materi" class="tab-content space-y-8">
+            <!-- Hero Banner -->
+            <div class="glass-panel p-6 lg:p-10 rounded-2xl cyber-border relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-cyber-accent/10 rounded-full blur-3xl"></div>
+                <div class="relative z-10 max-w-3xl space-y-4">
+                    <span class="px-3 py-1 bg-cyber-accent/10 border border-cyber-accent/30 text-cyber-accent text-xs font-orbitron tracking-widest uppercase rounded-full">Modul Pembelajaran Utama</span>
+                    <h2 class="text-3xl lg:text-5xl font-extrabold font-orbitron text-white leading-tight">Memahami Struktur & Kebahasaan <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-accent to-cyber-pink">Teks Prosedur</span></h2>
+                    <p class="text-gray-300 leading-relaxed text-base lg:text-lg">
+                        Teks prosedur adalah jenis teks yang menyampaikan langkah-langkah atau tahapan secara sistematis untuk mencapai suatu tujuan tertentu. Mempelajari teks ini sangat penting dalam penulisan panduan teknis, eksperimen, hingga instruksi operasional standar (SOP).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Grid Kartu Konsep Materi -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Kartu 1: Pengertian -->
+                <div class="glass-panel p-6 rounded-xl cyber-border hover:border-cyber-accent transition-all">
+                    <div class="w-12 h-12 bg-cyber-accent/10 rounded-lg flex items-center justify-center text-cyber-accent text-xl mb-4 border border-cyber-accent/30">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold text-white mb-2">1. Pengertian Utama</h3>
+                    <p class="text-gray-400 text-sm leading-relaxed">
+                        Teks prosedur adalah teks instruksional yang bertujuan memberikan petunjuk kronologis agar pembaca dapat menyelesaikan suatu tugas dengan efisien dan tepat.
+                    </p>
+                </div>
+
+                <!-- Kartu 2: Struktur Utama -->
+                <div class="glass-panel p-6 rounded-xl cyber-border hover:border-cyber-accent transition-all">
+                    <div class="w-12 h-12 bg-cyber-pink/10 rounded-lg flex items-center justify-center text-cyber-pink text-xl mb-4 border border-cyber-pink/30">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold text-white mb-2">2. Empat Struktur Utama</h3>
+                    <ul class="text-gray-400 text-sm space-y-2 list-disc list-inside">
+                        <li class="text-gray-300"><strong class="text-cyber-accent">Tujuan:</strong> Pengantar hasil akhir.</li>
+                        <li class="text-gray-300"><strong class="text-cyber-accent">Material:</strong> Alat dan bahan rincian.</li>
+                        <li class="text-gray-300"><strong class="text-cyber-accent">Langkah:</strong> Urutan kronologis baku.</li>
+                        <li class="text-gray-300"><strong class="text-cyber-accent">Penutup:</strong> Kesimpulan / apresiasi.</li>
+                    </ul>
+                </div>
+
+                <!-- Kartu 3: Kebahasaan -->
+                <div class="glass-panel p-6 rounded-xl cyber-border hover:border-cyber-accent transition-all">
+                    <div class="w-12 h-12 bg-cyber-purple/20 rounded-lg flex items-center justify-center text-purple-400 text-xl mb-4 border border-purple-500/30">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3 class="font-orbitron text-xl font-bold text-white mb-2">3. Ciri Kebahasaan</h3>
+                    <ul class="text-gray-400 text-sm space-y-1.5">
+                        <li><span class="text-cyber-pink font-semibold">● Verba Imperatif:</span> Kata kerja perintah (contoh: <em>aduklah, tuangkan</em>).</li>
+                        <li><span class="text-cyber-pink font-semibold">● Konjungsi Temporal:</span> Kata hubung urutan (contoh: <em>kemudian, setelah itu</em>).</li>
+                        <li><span class="text-cyber-pink font-semibold">● Keterangan Cara/Waktu:</span> Rincian presisi (contoh: <em>selama 5 menit</em>).</li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Detail Interaktif Tabs dalam Materi -->
+            <div class="glass-panel p-6 lg:p-8 rounded-2xl border border-gray-800">
+                <h3 class="font-orbitron text-xl font-bold text-white mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-cyber-accent"></i> Pembahasan Struktur Secara Rinci
+                </h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                    <button onclick="showStructureDetail('tujuan')" id="btn-struct-tujuan" class="struct-tab-btn p-4 rounded-xl text-left border border-cyber-accent bg-cyber-accent/10 text-white transition-all">
+                        <div class="font-orbitron font-bold text-sm text-cyber-accent">BAGIAN I</div>
+                        <div class="font-bold text-lg">Tujuan (Goal)</div>
+                    </button>
+                    <button onclick="showStructureDetail('material')" id="btn-struct-material" class="struct-tab-btn p-4 rounded-xl text-left border border-gray-800 bg-cyber-card text-gray-400 hover:text-white transition-all">
+                        <div class="font-orbitron font-bold text-sm text-gray-500">BAGIAN II</div>
+                        <div class="font-bold text-lg">Material / Alat</div>
+                    </button>
+                    <button onclick="showStructureDetail('langkah')" id="btn-struct-langkah" class="struct-tab-btn p-4 rounded-xl text-left border border-gray-800 bg-cyber-card text-gray-400 hover:text-white transition-all">
+                        <div class="font-orbitron font-bold text-sm text-gray-500">BAGIAN III</div>
+                        <div class="font-bold text-lg">Langkah-Langkah</div>
+                    </button>
+                    <button onclick="showStructureDetail('penutup')" id="btn-struct-penutup" class="struct-tab-btn p-4 rounded-xl text-left border border-gray-800 bg-cyber-card text-gray-400 hover:text-white transition-all">
+                        <div class="font-orbitron font-bold text-sm text-gray-500">BAGIAN IV</div>
+                        <div class="font-bold text-lg">Penutup / Reorientasi</div>
+                    </button>
+                </div>
+
+                <!-- Detail Output Panel -->
+                <div id="structure-detail-content" class="mt-6 p-6 rounded-xl bg-cyber-bg/80 border border-cyber-accent/20 text-gray-300 space-y-3">
+                    <!-- Dynamic content will be injected by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= SIMULASI INTERAKTIF (GAME URUTAN) ================= -->
+        <section id="section-simulasi" class="tab-content hidden space-y-6">
+            <div class="glass-panel p-6 rounded-2xl cyber-border flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div>
+                    <span class="px-3 py-1 bg-cyber-pink/10 border border-cyber-pink/30 text-cyber-pink text-xs font-orbitron tracking-widest uppercase rounded-full">Simulasi Laboratorium</span>
+                    <h2 class="text-2xl lg:text-3xl font-extrabold font-orbitron text-white mt-2">Menyusun <span class="text-cyber-pink">Prosedur Acak</span></h2>
+                    <p class="text-gray-400 text-sm mt-1">Geser (drag) atau gunakan tombol navigasi untuk mengurutkan langkah prosedur ilmiah pembuatan larutan berikut secara benar!</p>
+                </div>
+                <button onclick="resetSimulation()" class="px-4 py-2 border border-cyber-accent text-cyber-accent hover:bg-cyber-accent/10 rounded-lg font-orbitron text-xs transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-rotate"></i> Acak Ulang
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Drop Container (Urutan Langkah) -->
+                <div class="glass-panel p-6 rounded-2xl border border-gray-800 space-y-4">
+                    <h3 class="font-orbitron font-bold text-white text-lg flex items-center justify-between">
+                        <span><i class="fa-solid fa-list-ol text-cyber-accent mr-2"></i> Urutan Langkah Kamu</span>
+                        <span id="sim-status-badge" class="text-xs px-2 py-1 rounded bg-gray-800 text-gray-400">Belum Diverifikasi</span>
+                    </h3>
+                    <p class="text-xs text-gray-400">Susun langkah-langkah di bawah dari urutan 1 (teratas) sampai 5 (terbawah):</p>
+
+                    <div id="sortable-list" class="space-y-3 min-h-[300px]">
+                        <!-- Dynamic Draggable Items injected here -->
+                    </div>
+
+                    <button onclick="verifyOrder()" class="w-full py-3 rounded-xl btn-cyber font-orbitron font-bold text-black uppercase tracking-wider flex items-center justify-center gap-2 mt-4">
+                        <i class="fa-solid fa-shield-halved"></i> Verifikasi Urutan Prosedur
+                    </button>
+                </div>
+
+                <!-- Panel Keterangan & Feedback -->
+                <div class="space-y-6">
+                    <div class="glass-panel p-6 rounded-2xl border border-gray-800">
+                        <h4 class="font-orbitron font-bold text-cyber-accent text-md mb-3"><i class="fa-solid fa-circle-info mr-2"></i> Topik Prosedur Laboratorium</h4>
+                        <div class="bg-cyber-bg p-4 rounded-xl border border-gray-800 text-sm space-y-2">
+                            <p class="font-semibold text-white">Judul: "Prosedur Pembuatan Larutan Disinfektan Aman di Laboratorium"</p>
+                            <p class="text-gray-400 text-xs">Tujuan: Menghasilkan larutan pembersih kuman standar dengan tingkat presisi dan keamanan tinggi.</p>
+                        </div>
+                    </div>
+
+                    <div id="sim-feedback-box" class="glass-panel p-6 rounded-2xl border border-gray-800 hidden">
+                        <!-- Dynamic Result feedback injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= KUIS EVALUASI ================= -->
+        <section id="section-kuis" class="tab-content hidden space-y-6">
+            
+            <!-- Quiz Start Screen -->
+            <div id="quiz-start-screen" class="glass-panel p-8 lg:p-12 rounded-2xl cyber-border text-center space-y-6 max-w-2xl mx-auto">
+                <div class="w-20 h-20 bg-cyber-accent/10 border border-cyber-accent rounded-2xl flex items-center justify-center mx-auto text-cyber-accent text-3xl shadow-lg shadow-cyber-accent/20">
+                    <i class="fa-solid fa-brain"></i>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-extrabold font-orbitron text-white">Kuis Evaluasi Teks Prosedur</h2>
+                    <p class="text-gray-400 text-sm mt-2">Uji pemahaman akademismu tentang struktur dan kaidah kebahasaan teks prosedur lewat 5 soal analisis berstandar perguruan tinggi.</p>
+                </div>
+                <div class="grid grid-cols-3 gap-4 py-4 border-y border-gray-800 text-center">
+                    <div>
+                        <div class="text-xs text-gray-400">Jumlah Soal</div>
+                        <div class="font-orbitron text-xl font-bold text-cyber-accent">5 Soal</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400">Tipe Pilihan</div>
+                        <div class="font-orbitron text-xl font-bold text-cyber-pink">Ganda (A-D)</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-400">Standar Lulus</div>
+                        <div class="font-orbitron text-xl font-bold text-cyber-success">80%</div>
+                    </div>
+                </div>
+                <button onclick="startQuiz()" class="w-full py-4 rounded-xl btn-cyber font-orbitron font-extrabold text-black uppercase tracking-wider text-lg shadow-xl">
+                    <i class="fa-solid fa-play mr-2"></i> Mulai Kuis Sekarang
+                </button>
+            </div>
+
+            <!-- Quiz Play Container -->
+            <div id="quiz-play-container" class="hidden space-y-6 max-w-3xl mx-auto">
+                
+                <!-- Progress Header -->
+                <div class="glass-panel p-4 rounded-xl border border-gray-800 flex justify-between items-center">
+                    <div class="flex items-center gap-3">
+                        <span id="quiz-progress-text" class="font-orbitron font-bold text-cyber-accent text-sm">Soal 1 / 5</span>
+                    </div>
+                    <div class="w-1/2 bg-cyber-bg rounded-full h-2.5 overflow-hidden border border-gray-800">
+                        <div id="quiz-progress-bar" class="bg-gradient-to-r from-cyber-accent to-cyber-pink h-full transition-all duration-300" style="width: 20%"></div>
+                    </div>
+                    <div class="font-orbitron font-bold text-white text-sm">
+                        Skor: <span id="quiz-score-live" class="text-cyber-pink">0</span>
+                    </div>
+                </div>
+
+                <!-- Question Card -->
+                <div class="glass-panel p-6 lg:p-8 rounded-2xl cyber-border space-y-6">
+                    <div id="quiz-question-text" class="text-lg lg:text-xl font-bold text-white leading-relaxed">
+                        <!-- Question dynamic content -->
+                    </div>
+
+                    <div id="quiz-options-container" class="space-y-3">
+                        <!-- Options buttons dynamic content -->
+                    </div>
+                </div>
+
+                <!-- Discussion Box (Hidden initially) -->
+                <div id="quiz-discussion-box" class="glass-panel p-6 rounded-2xl border border-gray-800 hidden space-y-3">
+                    <div id="quiz-discussion-title" class="font-orbitron font-bold text-sm"></div>
+                    <p id="quiz-discussion-text" class="text-sm text-gray-300 leading-relaxed"></p>
+                    <button onclick="nextQuestion()" class="w-full py-3 rounded-xl bg-cyber-accent text-black font-orbitron font-bold hover:brightness-110 transition-all flex items-center justify-center gap-2">
+                        Lanjut Soal Berikutnya <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quiz Result Screen -->
+            <div id="quiz-result-screen" class="hidden glass-panel p-8 lg:p-12 rounded-2xl cyber-border text-center space-y-6 max-w-2xl mx-auto">
+                <div class="w-24 h-24 rounded-full bg-cyber-accent/10 border-2 border-cyber-accent flex items-center justify-center mx-auto text-cyber-accent text-4xl shadow-xl shadow-cyber-accent/30 font-orbitron font-bold" id="result-badge">
+                    100
+                </div>
+                <div>
+                    <h2 class="text-3xl font-extrabold font-orbitron text-white" id="result-status-title">Luar Biasa!</h2>
+                    <p class="text-gray-400 text-sm mt-2" id="result-status-desc">Kamu telah menguasai konsep struktur dan analisis kebahasaan Teks Prosedur.</p>
+                </div>
+
+                <div class="p-4 rounded-xl bg-cyber-bg border border-gray-800 grid grid-cols-2 gap-4 text-center">
+                    <div>
+                        <div class="text-xs text-gray-500">Jawaban Benar</div>
+                        <div id="result-correct-count" class="font-orbitron text-2xl font-bold text-cyber-success">0 / 5</div>
+                    </div>
+                    <div>
+                        <div class="text-xs text-gray-500">Nilai Akhir</div>
+                        <div id="result-final-score" class="font-orbitron text-2xl font-bold text-cyber-accent">0</div>
+                    </div>
+                </div>
+
+                <div class="flex gap-4">
+                    <button onclick="resetQuiz()" class="w-full py-3 rounded-xl border border-cyber-accent text-cyber-accent font-orbitron font-bold hover:bg-cyber-accent/10 transition-all">
+                        <i class="fa-solid fa-rotate-left mr-2"></i> Ulangi Kuis
+                    </button>
+                    <button onclick="switchTab('materi')" class="w-full py-3 rounded-xl btn-cyber text-black font-orbitron font-bold transition-all">
+                        <i class="fa-solid fa-book-open mr-2"></i> Baca Materi Lagi
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-panel border-t border-gray-800 px-4 lg:px-8 py-6 text-center text-xs text-gray-500">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                &copy; 2026 <span class="text-cyber-accent font-orbitron">PROSEDURLAB</span> - Media Pembelajaran Teks Prosedur Interaktif.
+            </div>
+            <div class="flex gap-4 text-gray-400">
+                <span><i class="fa-solid fa-code text-cyber-pink"></i> HTML5 Single File</span>
+                <span><i class="fa-solid fa-bolt text-cyber-accent"></i> Fast Web Architecture</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // ================= STATE MANAGEMENT =================
+        const state = {
+            currentTab: 'materi',
+            quiz: {
+                currentIndex: 0,
+                score: 0,
+                answers: [],
+                questions: [
+                    {
+                        question: "Perhatikan petikan teks berikut: 'Masukkan larutan A ke dalam tabung reaksi secara perlahan, kemudian aduklah selama 2 menit menggunakan pengaduk kaca.' Kaidah kebahasaan menonjol yang terdapat pada kata 'aduklah' dan 'kemudian' adalah...",
+                        options: [
+                            "Verba deklaratif dan konjungsi kausalitas",
+                            "Verba imperatif dan konjungsi temporal",
+                            "Nomina konkret dan konjungsi syarat",
+                            "Verba pasif dan keterangan tempat"
+                        ],
+                        correct: 1,
+                        discussion: "Kata 'aduklah' merupakan verba imperatif (kata kerja perintah), sedangkan 'kemudian' adalah konjungsi temporal yang menyatakan urutan waktu kejadian."
+                    },
+                    {
+                        question: "Dalam penulisan teks prosedur kompleks akademik, bagian yang berisi gambaran umum mengenai alasan atau hasil akhir yang ingin dicapai dinamakan...",
+                        options: [
+                            "Langkah-Langkah (Steps)",
+                            "Penutup / Reorientasi",
+                            "Tujuan (Goal / Aim)",
+                            "Material / Peralatan"
+                        ],
+                        correct: 2,
+                        discussion: "Bagian Tujuan (Goal) memuat pengantar mengenai apa yang akan dibuat atau dikerjakan serta hasil akhir yang diharapkan."
+                    },
+                    {
+                        question: "Manakah di antara pilihan berikut yang merupakan contoh kalimat yang menggunakan Keterangan Cara secara presisi?",
+                        options: [
+                            "Rebuslah air tersebut sampai benar-benar mendidih.",
+                            "Potonglah bahan-bahan itu secukupnya saja.",
+                            "Tumbuh-tumbuhan itu harus disiram tiap hari.",
+                            "Kocok adonan telur menggunakan mixer berkecepatan tinggi selama 3 menit."
+                        ],
+                        correct: 3,
+                        discussion: "Pilihan D menggunakan keterangan cara dan waktu yang sangat presisi ('menggunakan mixer berkecepatan tinggi selama 3 menit')."
+                    },
+                    {
+                        question: "Jika dalam sebuah teks prosedur tahapan kerja disusun secara tidak acak/harus berurutan secara ketat, maka jenis teks prosedur tersebut tergolong ke dalam...",
+                        options: [
+                            "Teks Prosedur Sederhana",
+                            "Teks Prosedur Kompleks",
+                            "Teks Prosedur Protokol",
+                            "Teks Prosedur Bebas"
+                        ],
+                        correct: 1,
+                        discussion: "Teks prosedur kompleks membutuhkan urutan langkah yang rumit dan tidak boleh ditukar posisinya karena setiap langkah saling mempengaruhi secara struktural."
+                    },
+                    {
+                        question: "Fungsi utama dari bagian 'Penutup / Simpulan' pada struktur teks prosedur adalah...",
+                        options: [
+                            "Menjelaskan rincian biaya pembuatan alat",
+                            "Memberikan penegasan ulang atau ucapan selamat atas keberhasilan prosedur",
+                            "Menyebutkan daftar pustaka acuan instruksi",
+                            "Mengisi ruang kosong agar paragraf menjadi panjang"
+                        ],
+                        correct: 1,
+                        discussion: "Bagian penutup berisi penegasan ulang manfaat, ucapan selamat, atau apresiasi atas selesainya prosedur dengan baik."
+                    }
+                ]
+            },
+            simulation: {
+                correctOrder: [
+                    "Pakai kacamata pelindung dan sarung tangan laboratorium.",
+                    "Ukur 50 ml air suling menggunakan gelas ukur.",
+                    "Tuangkan 5 gram zat aktif secara perlahan ke dalam air.",
+                    "Aduk larutan secara konstan hingga melarut sempurna.",
+                    "Simpan larutan dalam botol steril dan beri label tanggal."
+                ],
+                currentOrder: []
+            }
+        };
+
+        // Rincian Detail Struktur Materi
+        const structureDetails = {
+            tujuan: {
+                title: "Bagian 1: Tujuan (Goal/Aim)",
+                desc: "Tujuan merupakan bagian pengantar dari teks prosedur. Bagian ini menjelaskan gambaran umum tentang apa yang akan dibuat, dilakukan, atau dioperasikan, serta hasil akhir yang ingin dicapai pembaca."
+            },
+            material: {
+                title: "Bagian 2: Material (Alat & Bahan)",
+                desc: "Berisi daftar perlengkapan, bahan-bahan, atau alat yang dibutuhkan secara spesifik lengkap dengan takaran atau kuantitasnya agar proses prosedur berjalan presisi."
+            },
+            langkah: {
+                title: "Bagian 3: Langkah-Langkah (Steps)",
+                desc: "Inti dari teks prosedur yang memuat urutan tindakan kronologis dari awal hingga akhir. Harus ditulis secara logis, runtut, dan tidak membingungkan."
+            },
+            penutup: {
+                title: "Bagian 4: Penutup / Reorientasi",
+                desc: "Bagian opsional yang berisi kesimpulan, ucapan selamat menikmati hasil, atau tips tambahan untuk menjaga keselamatan/kualitas hasil prosedur."
+            }
+        };
+
+        // ================= TAB SWITCHING =================
+        function switchTab(tabId) {
+            state.currentTab = tabId;
+            
+            // Hide all contents
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            
+            // Reset nav buttons styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-cyber-accent', 'text-black');
+                btn.classList.add('text-gray-400');
+            });
+
+            // Show target section & highlight active nav
+            document.getElementById(`section-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.add('bg-cyber-accent', 'text-black');
+            activeBtn.classList.remove('text-gray-400');
+        }
+
+        // ================= MATERI SECTION LOGIC =================
+        function showStructureDetail(key) {
+            const detail = structureDetails[key];
+            const container = document.getElementById('structure-detail-content');
+            
+            // Highlight Tab Buttons
+            document.querySelectorAll('.struct-tab-btn').forEach(btn => {
+                btn.classList.remove('border-cyber-accent', 'bg-cyber-accent/10', 'text-white');
+                btn.classList.add('border-gray-800', 'bg-cyber-card', 'text-gray-400');
+            });
+
+            const activeBtn = document.getElementById(`btn-struct-${key}`);
+            activeBtn.classList.add('border-cyber-accent', 'bg-cyber-accent/10', 'text-white');
+            activeBtn.classList.remove('border-gray-800', 'bg-cyber-card', 'text-gray-400');
+
+            container.innerHTML = `
+                <h4 class="text-cyber-accent font-orbitron font-bold text-lg">${detail.title}</h4>
+                <p class="leading-relaxed text-sm text-gray-300">${detail.desc}</p>
+            `;
+        }
+
+        // ================= SIMULASI LOGIC =================
+        function initSimulation() {
+            // Shuffle array
+            state.simulation.currentOrder = [...state.simulation.correctOrder].sort(() => Math.random() - 0.5);
+            renderSimulationList();
+            document.getElementById('sim-feedback-box').classList.add('hidden');
+            document.getElementById('sim-status-badge').textContent = 'Belum Diverifikasi';
+            document.getElementById('sim-status-badge').className = 'text-xs px-2 py-1 rounded bg-gray-800 text-gray-400';
+        }
+
+        function renderSimulationList() {
+            const listEl = document.getElementById('sortable-list');
+            listEl.innerHTML = '';
+
+            state.simulation.currentOrder.forEach((itemText, index) => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'sortable-item glass-panel p-4 rounded-xl border border-gray-700 flex items-center justify-between gap-3 text-sm';
+                itemEl.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-7 h-7 rounded-lg bg-cyber-accent/10 text-cyber-accent font-orbitron font-bold text-xs flex items-center justify-center border border-cyber-accent/30">${index + 1}</span>
+                        <span class="text-gray-200 font-medium">${itemText}</span>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="moveSimItem(${index}, -1)" class="p-1.5 rounded hover:bg-cyber-accent/20 text-gray-400 hover:text-cyber-accent" ${index === 0 ? 'disabled style="opacity:0.3"' : ''}>
+                            <i class="fa-solid fa-chevron-up"></i>
+                        </button>
+                        <button onclick="moveSimItem(${index}, 1)" class="p-1.5 rounded hover:bg-cyber-accent/20 text-gray-400 hover:text-cyber-accent" ${index === state.simulation.currentOrder.length - 1 ? 'disabled style="opacity:0.3"' : ''}>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </button>
+                    </div>
+                `;
+                listEl.appendChild(itemEl);
+            });
+        }
+
+        function moveSimItem(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= state.simulation.currentOrder.length) return;
+            
+            const temp = state.simulation.currentOrder[index];
+            state.simulation.currentOrder[index] = state.simulation.currentOrder[newIndex];
+            state.simulation.currentOrder[newIndex] = temp;
+            
+            renderSimulationList();
+        }
+
+        function resetSimulation() {
+            initSimulation();
+        }
+
+        function verifyOrder() {
+            let isCorrect = true;
+            for (let i = 0; i < state.simulation.correctOrder.length; i++) {
+                if (state.simulation.currentOrder[i] !== state.simulation.correctOrder[i]) {
+                    isCorrect = false;
+                    break;
+                }
+            }
+
+            const feedbackBox = document.getElementById('sim-feedback-box');
+            const badge = document.getElementById('sim-status-badge');
+            feedbackBox.classList.remove('hidden');
+
+            if (isCorrect) {
+                badge.textContent = 'BERHASIL!';
+                badge.className = 'text-xs px-2 py-1 rounded bg-cyber-success/20 text-cyber-success border border-cyber-success/40 font-bold';
+                feedbackBox.className = 'glass-panel p-6 rounded-2xl border border-cyber-success/40 bg-cyber-success/5 space-y-2';
+                feedbackBox.innerHTML = `
+                    <div class="font-orbitron font-bold text-cyber-success flex items-center gap-2">
+                        <i class="fa-solid fa-circle-check text-xl"></i> Urutan Sempurna!
+                    </div>
+                    <p class="text-xs text-gray-300">Selamat! Langkah-langkah prosedur laboratorium telah terstruktur secara logis dan aman sesuai kaidah baku.</p>
+                `;
+            } else {
+                badge.textContent = 'PERLU PERBAIKAN';
+                badge.className = 'text-xs px-2 py-1 rounded bg-cyber-pink/20 text-cyber-pink border border-cyber-pink/40 font-bold';
+                feedbackBox.className = 'glass-panel p-6 rounded-2xl border border-cyber-pink/40 bg-cyber-pink/5 space-y-2';
+                feedbackBox.innerHTML = `
+                    <div class="font-orbitron font-bold text-cyber-pink flex items-center gap-2">
+                        <i class="fa-solid fa-triangle-exclamation text-xl"></i> Urutan Masih Belum Tepat
+                    </div>
+                    <p class="text-xs text-gray-300">Perhatikan faktor keselamatan kerja (K3). Memakai APD harus dilakukan sebelum mengukur bahan larutan!</p>
+                `;
+            }
+        }
+
+        // ================= KUIS EVALUASI LOGIC =================
+        function startQuiz() {
+            state.quiz.currentIndex = 0;
+            state.quiz.score = 0;
+            state.quiz.answers = [];
+            
+            document.getElementById('quiz-start-screen').classList.add('hidden');
+            document.getElementById('quiz-result-screen').classList.add('hidden');
+            document.getElementById('quiz-play-container').classList.remove('hidden');
+            
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = state.quiz.questions[state.quiz.currentIndex];
+            const total = state.quiz.questions.length;
+
+            // Update Header Status
+            document.getElementById('quiz-progress-text').textContent = `Soal ${state.quiz.currentIndex + 1} / ${total}`;
+            document.getElementById('quiz-progress-bar').style.width = `${((state.quiz.currentIndex + 1) / total) * 100}%`;
+            document.getElementById('quiz-score-live').textContent = state.quiz.score;
+
+            // Set Question Text
+            document.getElementById('quiz-question-text').textContent = q.question;
+
+            // Render Options
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
+            document.getElementById('quiz-discussion-box').classList.add('hidden');
+
+            q.options.forEach((optText, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-opt-btn w-full p-4 rounded-xl border border-gray-800 bg-cyber-card text-left text-sm text-gray-200 hover:border-cyber-accent hover:bg-cyber-accent/5 transition-all flex items-center justify-between gap-3';
+                btn.onclick = () => selectAnswer(i);
+                btn.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-7 h-7 rounded-lg bg-cyber-bg border border-gray-700 text-cyber-accent font-orbitron font-bold text-xs flex items-center justify-center">${String.fromCharCode(65 + i)}</span>
+                        <span>${optText}</span>
+                    </div>
+                    <i class="fa-regular fa-circle text-gray-600 opt-icon"></i>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(selectedIndex) {
+            const q = state.quiz.questions[state.quiz.currentIndex];
+            const isCorrect = selectedIndex === q.correct;
+
+            if (isCorrect) {
+                state.quiz.score += 20;
+            }
+
+            // Disable options
+            const btns = document.querySelectorAll('.quiz-opt-btn');
+            btns.forEach((btn, idx) => {
+                btn.onclick = null;
+                if (idx === q.correct) {
+                    btn.classList.remove('border-gray-800', 'bg-cyber-card');
+                    btn.classList.add('border-cyber-success', 'bg-cyber-success/10', 'text-cyber-success');
+                } else if (idx === selectedIndex && !isCorrect) {
+                    btn.classList.remove('border-gray-800', 'bg-cyber-card');
+                    btn.classList.add('border-cyber-pink', 'bg-cyber-pink/10', 'text-cyber-pink');
+                }
+            });
+
+            // Show Discussion Box
+            const discBox = document.getElementById('quiz-discussion-box');
+            const discTitle = document.getElementById('quiz-discussion-title');
+            const discText = document.getElementById('quiz-discussion-text');
+
+            discBox.classList.remove('hidden');
+            if (isCorrect) {
+                discTitle.textContent = "Jawaban Benar!";
+                discTitle.className = "font-orbitron font-bold text-sm text-cyber-success";
+            } else {
+                discTitle.textContent = "Jawaban Kurang Tepat!";
+                discTitle.className = "font-orbitron font-bold text-sm text-cyber-pink";
+            }
+            discText.textContent = q.discussion;
+        }
+
+        function nextQuestion() {
+            state.quiz.currentIndex++;
+            if (state.quiz.currentIndex < state.quiz.questions.length) {
+                renderQuestion();
+            } else {
+                showQuizResults();
+            }
+        }
+
+        function showQuizResults() {
+            document.getElementById('quiz-play-container').classList.add('hidden');
+            document.getElementById('quiz-result-screen').classList.remove('hidden');
+
+            const score = state.quiz.score;
+            document.getElementById('result-final-score').textContent = score;
+            document.getElementById('result-correct-count').textContent = `${score / 20} / 5`;
+            document.getElementById('result-badge').textContent = score;
+
+            const title = document.getElementById('result-status-title');
+            const desc = document.getElementById('result-status-desc');
+
+            if (score >= 80) {
+                title.textContent = "Sangat Memuaskan!";
+                desc.textContent = "Kamu menunjukkan pemahaman akademis yang tinggi terkait struktur dan bahasa Teks Prosedur.";
+            } else {
+                title.textContent = "Perlu Belajar Lagi";
+                desc.textContent = "Pelajari kembali modul materi utama untuk meningkatkan pemahaman mengenai kaidah bahasa dan struktur.";
+            }
+        }
+
+        function resetQuiz() {
+            startQuiz();
+        }
+
+        // Initialization on Load
+        window.onload = function() {
+            showStructureDetail('tujuan');
+            initSimulation();
+        };
+    </script>
+</body>
+</html>
